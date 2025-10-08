@@ -11,7 +11,6 @@ public class MovieService {
     private final Client client;
 
     public MovieService() {
-        // Make sure GOOGLE_API_KEY is set in environment variables
         this.client = new Client();
     }
 
@@ -25,13 +24,42 @@ public class MovieService {
             return response.text();
         } catch (Exception e) {
             e.printStackTrace();
-            // Fallback description if Gemini fails
             return "Description not available due to an error.";
+        }
+    }
+
+    public String generateBoxOffice(String title) {
+        try {
+            GenerateContentResponse response = client.models.generateContent(
+                    "gemini-2.0-flash-001",
+                    "How much did the movie " + title + " generate at the box office?",
+                    null
+            );
+            return response.text();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Box Office not available due to an error.";
+        }
+    }
+
+    public String generateAcademyAwards(String title) {
+        try {
+            GenerateContentResponse response = client.models.generateContent(
+                    "gemini-2.0-flash-001",
+                    "Which Oscars did " + title + " win at the Academy Awards?",
+                    null
+            );
+            return response.text();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Academy Awards not available due to an error.";
         }
     }
 
     public Movie createMovie(String title, double rating) {
         String description = generateDescription(title);
-        return new Movie(title, rating, description);
+        String boxOffice = generateBoxOffice(title);
+        String academyAwards = generateAcademyAwards(title);
+        return new Movie(title, rating, description, boxOffice, academyAwards);
     }
 }

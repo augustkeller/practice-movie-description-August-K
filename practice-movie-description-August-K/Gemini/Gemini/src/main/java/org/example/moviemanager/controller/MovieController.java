@@ -37,4 +37,19 @@ public class MovieController {
     public String describe(@RequestParam("title") String title) throws Exception {
         return movieService.generateDescription(title);
     }
+
+    @GetMapping("/boxoffice")
+    public String boxOffice(@RequestParam("title") String title) throws Exception {
+        return movieService.generateBoxOffice(title);
+    }
+
+    @GetMapping("/oscars")
+    public String oscars(@RequestParam("title") String title) throws Exception {
+        return movieService.generateAcademyAwards(title);
+    }
+
+    @GetMapping("/filter")
+    public List<Movie> getMoviesByMinRating(@RequestParam(name = "minRating") double minRating) {
+        return repository.getMoviesByMinRating(minRating);
+    }
 }
